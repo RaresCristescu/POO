@@ -200,7 +200,8 @@ nr_int_mari operator +(nr_int_mari n1,nr_int_mari n2)
     }
     else if(n1.semn=='+'&&n2.semn=='-')
     {
-        n2=n2*(-1);cout<<n2<<" ";p=n1-n2;cout<<p<<" "<<endl;
+        n2=n2*(-1);
+        p=n1-n2;
         if(n1>n2)p.semn='+';
         else p.semn='-';
         return p;
@@ -302,13 +303,8 @@ nr_int_mari operator *(vec_mari v1,vec_mari v2)
         p=r;
         for(i=0;i<a;i++)
             {
-                cout<<v1.v[i]<<" "<<v2.v[i]<<" ";
                 r=(v1.v[i]*v2.v[i]);
-                cout<<r<<" ";
                 p=r+p;
-
-
-                cout<<p<<endl;
             }
         return p;
     }
