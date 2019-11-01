@@ -21,6 +21,7 @@ public:
     friend void transf(char*,int,int*);
     friend class vec_mari;
 };
+
 istream &operator>>(istream & in, nr_int_mari& p)
 {
     char v[1000];
@@ -34,7 +35,8 @@ istream &operator>>(istream & in, nr_int_mari& p)
 }
 ostream &operator <<(ostream&out,nr_int_mari&p)
 {
-    out<<p.semn<<p.nr;
+    if(p.nr[0]=='0')out<<p.nr;
+    else out<<p.semn<<p.nr;
     return out;
 }
 int operator >(nr_int_mari n1,nr_int_mari n2)
@@ -270,8 +272,17 @@ nr_int_mari *v;
 public:
     vec_mari(){n=0;v=NULL;}
     vec_mari(int x){n=x;v=new nr_int_mari[x];}
+    vec_mari(const vec_mari&p)
+    {
+    int i;
+    n=p.n;
+    v=new nr_int_mari [n];
+    for(i=0;i<n;i++)
+    v[i]=p.v[i];
+    }
     friend istream &operator >>(istream&,vec_mari&);
     friend ostream &operator <<(ostream&,vec_mari&);
+    vec_mari &operator =(const vec_mari&);
     friend nr_int_mari operator *(vec_mari,vec_mari);
     friend int operator >(nr_int_mari n1,nr_int_mari n2);
     nr_int_mari maxim( const nr_int_mari &b);
@@ -317,20 +328,31 @@ nr_int_mari maximul(vec_mari v) //aflarea maximului dintr-un vector de numere ma
         if((p>v.v[i])==0)p=v.v[i];
     return p;
 }
+vec_mari &vec_mari::operator =(const vec_mari &v1)//atribuire vector unui vector
+{
+    int i;
+    n=v1.n;
+    v=new nr_int_mari [n];
+    for(i=0;i<n;i++)
+    v[i]=v1.v[i];
+}
 int main()
 {
 
     nr_int_mari p,q,r;
-    vec_mari v,w;
-    //int a;
-    cin>>v>>w;
-    //cin>>p>>a;
-    r=v*w;
+    vec_mari v,t;
+    int a;
+    //cin>>v>>w;
+    cin>>p>>q;
+    //r=v*w;
     //r=maximul(v);
-    //r=p+a;
+    //vec_mari w(v);
+    //t=w;
+    r=p*q;
     cout<<r;
     //r=p-q;
     //cout<<endl<<r;
     //cout<<p<<" "<<" "<<q<<" "<<r;
     return 0;
 }
+
