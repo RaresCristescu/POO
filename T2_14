@@ -1,48 +1,29 @@
 #include <iostream>
+#include <string.h>
 using namespace std;
 class Vector
 {
-    int *a;
-    int n;
-public:
-    Vector(){a=NULL;}
-    Vector(int b){n=b;a=new int [n];}
-    Vector(int b,int c){n=c;a[n]=b;}
-    Vector(const Vector &v){a=v.a;}
-    ~Vector(){delete []a;}
-    friend istream &operator >>(istream&,Vector&);
-    friend ostream &operator <<(ostream&,Vector&);
-    Vector &operator =(const Vector&);
+    //int *a;
+    public:
+        int *a;
+    //Vector(){a=NULL;}//initializare
+    Vector(int *b=NULL){a=b;}//parametrizare
+    Vector(const Vector &v){a=v.a;}//copiere
 };
-Vector &Vector::operator =(const Vector &v)
-{
-    int i;
-    n=v1.n;
-    v=new nr_int_mari [n];
-    for(i=0;i<n;i++)
-    v[i]=v1.v[i];
-}
-/*istream &operator>>(istream & in, Vector& p)
-{
-    int &v;
-    in>>v;
-    p=v;
-    return in;
-}
-ostream &operator <<(ostream& out,Vector& p)
-{
-    out<<p;
-    return out;
-}*/
 class Nr_Natural_Mare
 {
     Vector v;
     int nr_cif;
-public:
-    Nr_Natural_Mare(){}
-    Nr_Natural_Mare(){}
-    Nr_Natural_Mare(const Nr_Natural_Mare & n){}
-    ~Nr_Natural_Mare(){}
+    public:
+    Nr_Natural_Mare(){nr_cif=0;}
+    Nr_Natural_Mare(int n){nr_cif=n;v.a=new int [n];}
+    Nr_Natural_Mare(const Nr_Natural_Mare & w)
+    {
+        nr_cif=w.nr_cif;
+        v.a=new int[nr_cif];
+        for(int i=0;i<nr_cif;i++)v.a[i]=w.v.a[i];
+    }
+    ~Nr_Natural_Mare(){delete []v.a;}
     friend istream &operator >>(istream&,Nr_Natural_Mare&);
     friend ostream &operator <<(ostream&,Nr_Natural_Mare&);
     friend Nr_Natural_Mare operator +(Nr_Natural_Mare ,Nr_Natural_Mare );
@@ -51,13 +32,52 @@ public:
     friend Nr_Natural_Mare operator *(Nr_Natural_Mare ,Nr_Natural_Mare );
     friend Nr_Natural_Mare operator *(Nr_Natural_Mare ,int);
     Nr_Natural_Mare &operator =(const Nr_Natural_Mare&);
-    
-};
 
+};
+istream &operator>>(istream & in, Nr_Natural_Mare& p)
+{
+    char v[1000];
+    in>>v;
+    p.nr_cif=strlen(v);
+    p.v.a=new int [p.nr_cif];
+    for(int i=p.nr_cif-1;i>0;i--)
+        p.v.a[i]=v[i];
+    return in;
+}
+ostream &operator <<(ostream& out,Nr_Natural_Mare& p)
+{
+    for(int i=p.nr_cif-1;i>0;i--)
+        out<<p.v.a[i]<<" ";
+    return out;
+}
+Nr_Natural_Mare operator +(Nr_Natural_Mare n1,Nr_Natural_Mare n2)
+{
+    int d,i,m,k,j,c=0;
+    Nr_Natural_Mare n3;
+    if(n1.nr_cif>n2.nr_cif)m=n1.nr_cif;
+    else m=n2.nr_cif;
+    n1.v.a[n1.nr_cif]=0;
+    n2.v.a[n2.nr_cif]=0;
+    if((n1.v.a[0]+n2.v.a[0])>9)d=1;//conditie pentru marirea numarului de cifre in numar
+    for(i=m+d-1,j=n1.nr_cif-1,k=n2.nr_cif-1;i>=0;i--,j--,k--)
+    {
+        if(m-n1.nr_cif>i)j=n1.nr_cif;
+        if(m-n2.nr_cif>i)k=n2.nr_cif;
+        n3.v.a[i]=c+n1.v.a[j]+n2.v.a[k];
+        if(n3.v.a[i]>9)
+        {
+            n3.v.a[i]=n3.v.a[i]%10;
+            c=1;
+        }
+        else c=0;
+    }
+    n1.v.a[n1.nr_cif]='\0';
+    n2.v.a[n2.nr_cif]='\0';
+    return n3;
+}
 int main()
 {
-    Vector v;
-    v(0)=15;
+
 //    cin>>v;
    // cout<<v;
     return 0;
