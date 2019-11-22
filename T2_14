@@ -1,14 +1,16 @@
 #include <iostream>
 #include <string.h>
 using namespace std;
+class Nr_Natural_Mare;
 class Vector
 {
-    //int *a;
+//    int *a;
     public:
         int *a;
     //Vector(){a=NULL;}//initializare
     Vector(int *b=NULL){a=b;}//parametrizare
     Vector(const Vector &v){a=v.a;}//copiere
+    friend class Nr_Natural_Mare;
 };
 class Nr_Natural_Mare
 {
@@ -40,25 +42,26 @@ istream &operator>>(istream & in, Nr_Natural_Mare& p)
     in>>v;
     p.nr_cif=strlen(v);
     p.v.a=new int [p.nr_cif];
-    for(int i=p.nr_cif-1;i>0;i--)
-        p.v.a[i]=v[i];
+    for(int i=p.nr_cif;i>=0;i--)
+        p.v.a[i]=v[i]-'0';
     return in;
 }
 ostream &operator <<(ostream& out,Nr_Natural_Mare& p)
 {
-    for(int i=p.nr_cif-1;i>0;i--)
-        out<<p.v.a[i]<<" ";
+    for(int i=0;i<p.nr_cif;i++)
+        out<<p.v.a[i];
     return out;
 }
 Nr_Natural_Mare operator +(Nr_Natural_Mare n1,Nr_Natural_Mare n2)
 {
-    int d,i,m,k,j,c=0;
+    int d=0,i,m,k,j,c=0;
     Nr_Natural_Mare n3;
     if(n1.nr_cif>n2.nr_cif)m=n1.nr_cif;
     else m=n2.nr_cif;
     n1.v.a[n1.nr_cif]=0;
     n2.v.a[n2.nr_cif]=0;
     if((n1.v.a[0]+n2.v.a[0])>9)d=1;//conditie pentru marirea numarului de cifre in numar
+    n3.v.a=new int [m+d];
     for(i=m+d-1,j=n1.nr_cif-1,k=n2.nr_cif-1;i>=0;i--,j--,k--)
     {
         if(m-n1.nr_cif>i)j=n1.nr_cif;
@@ -71,13 +74,23 @@ Nr_Natural_Mare operator +(Nr_Natural_Mare n1,Nr_Natural_Mare n2)
         }
         else c=0;
     }
-    n1.v.a[n1.nr_cif]='\0';
-    n2.v.a[n2.nr_cif]='\0';
+    n3.nr_cif=m+d;
     return n3;
+}
+Nr_Natural_Mare &Nr_Natural_Mare::operator =(const Nr_Natural_Mare &n1)//atribuire vector unui vector
+{
+    nr_cif=n1.nr_cif;
+    v.a=new int [nr_cif];
+    for(int i=0;i<nr_cif;i++)
+    v.a[i]=n1.v.a[i];
 }
 int main()
 {
-
+    Nr_Natural_Mare n1,n2,n3;
+    cin>>n1;
+    cin>>n2;
+    n3=n1+n2;
+    cout<<n3;
 //    cin>>v;
    // cout<<v;
     return 0;
