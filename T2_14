@@ -1,0 +1,64 @@
+#include <iostream>
+using namespace std;
+class Vector
+{
+    int *a;
+    int n;
+public:
+    Vector(){a=NULL;}
+    Vector(int b){n=b;a=new int [n];}
+    Vector(int b,int c){n=c;a[n]=b;}
+    Vector(const Vector &v){a=v.a;}
+    ~Vector(){delete []a;}
+    friend istream &operator >>(istream&,Vector&);
+    friend ostream &operator <<(ostream&,Vector&);
+    Vector &operator =(const Vector&);
+};
+Vector &Vector::operator =(const Vector &v)
+{
+    int i;
+    n=v1.n;
+    v=new nr_int_mari [n];
+    for(i=0;i<n;i++)
+    v[i]=v1.v[i];
+}
+/*istream &operator>>(istream & in, Vector& p)
+{
+    int &v;
+    in>>v;
+    p=v;
+    return in;
+}
+ostream &operator <<(ostream& out,Vector& p)
+{
+    out<<p;
+    return out;
+}*/
+class Nr_Natural_Mare
+{
+    Vector v;
+    int nr_cif;
+public:
+    Nr_Natural_Mare(){}
+    Nr_Natural_Mare(){}
+    Nr_Natural_Mare(const Nr_Natural_Mare & n){}
+    ~Nr_Natural_Mare(){}
+    friend istream &operator >>(istream&,Nr_Natural_Mare&);
+    friend ostream &operator <<(ostream&,Nr_Natural_Mare&);
+    friend Nr_Natural_Mare operator +(Nr_Natural_Mare ,Nr_Natural_Mare );
+    friend Nr_Natural_Mare operator +(Nr_Natural_Mare ,int);
+    friend Nr_Natural_Mare operator -(Nr_Natural_Mare ,Nr_Natural_Mare );
+    friend Nr_Natural_Mare operator *(Nr_Natural_Mare ,Nr_Natural_Mare );
+    friend Nr_Natural_Mare operator *(Nr_Natural_Mare ,int);
+    Nr_Natural_Mare &operator =(const Nr_Natural_Mare&);
+    
+};
+
+int main()
+{
+    Vector v;
+    v(0)=15;
+//    cin>>v;
+   // cout<<v;
+    return 0;
+}
