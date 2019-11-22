@@ -62,7 +62,7 @@ Nr_Natural_Mare operator +(Nr_Natural_Mare n1,Nr_Natural_Mare n2)
     n1.v.a[n1.nr_cif]=0;
     n2.v.a[n2.nr_cif]=0;
     if((n1.v.a[0]+n2.v.a[0])>9)d=1;//conditie pentru marirea numarului de cifre in numar
-    n3.v.a=new int [m+d];
+    n3.v.a=new int [m+d];//////////NU DADUSEM MEMORIE SI NU MERGEA ATENTIE
     for(i=m+d-1,j=n1.nr_cif-1,k=n2.nr_cif-1;i>=0;i--,j--,k--)
     {
         if(m-n1.nr_cif>i)j=n1.nr_cif;
