@@ -4,7 +4,8 @@ using namespace std;
 class Nr_Natural_Mare;
 class Vector
 {
-//    int *a;
+
+    //int *a;
     public:
         int *a;
     //Vector(){a=NULL;}//initializare
