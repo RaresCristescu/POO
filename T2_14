@@ -184,6 +184,12 @@ Nr_Natural_Mare &Nr_Natural_Mare::operator =(const Nr_Natural_Mare &n1)//atribui
     for(int i=0;i<nr_cif;i++)
     v.a[i]=n1.v.a[i];
 }
+class Numar_Intreg_mare:Nr_Natural_Mare
+{
+    char semn;
+    public:
+
+};
 int main()
 {
     int a=9;
