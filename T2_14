@@ -23,7 +23,7 @@ class Nr_Natural_Mare
     Vector v;
     int nr_cif;
     public:
-    Nr_Natural_Mare(){nr_cif=0;}
+    Nr_Natural_Mare(){nr_cif=0;v.a=NULL;}
     Nr_Natural_Mare(int n){nr_cif=n;v.a=new int [n];}
     Nr_Natural_Mare(const Nr_Natural_Mare & w)
     {
@@ -48,7 +48,7 @@ istream &operator>>(istream & in, Nr_Natural_Mare& p)
     in>>v;
     p.nr_cif=strlen(v);
     p.v.a=new int [p.nr_cif];
-    for(int i=p.nr_cif;i>=0;i--)
+    for(int i=0;i<p.nr_cif;i++)
         p.v.a[i]=v[i]-'0';
     return in;
 }
@@ -60,7 +60,7 @@ ostream &operator <<(ostream& out,Nr_Natural_Mare& p)
 }
 Nr_Natural_Mare operator +(Nr_Natural_Mare n1,Nr_Natural_Mare n2)
 {
-    int d=0,i,m,k,j,c=0;
+    /*int d=0,i,m,k,j,c=0;
     Nr_Natural_Mare n3;
     if(n1>n2)m=n1.nr_cif;
     else m=n2.nr_cif;
@@ -70,8 +70,8 @@ Nr_Natural_Mare operator +(Nr_Natural_Mare n1,Nr_Natural_Mare n2)
     n3.v.a=new int [m+d];//////////NU DADUSEM MEMORIE SI NU MERGEA ATENTIE
     for(i=m+d-1,j=n1.nr_cif-1,k=n2.nr_cif-1;i>=0;i--,j--,k--)
     {
-        if(m-n1.nr_cif>i)j=n1.nr_cif;
-        if(m-n2.nr_cif>i)k=n2.nr_cif;
+        if(m+d-n1.nr_cif>i)j=n1.nr_cif;
+        if(m+d-n2.nr_cif>i)k=n2.nr_cif;
         n3.v.a[i]=c+n1.v.a[j]+n2.v.a[k];
         if(n3.v.a[i]>9)
         {
@@ -81,6 +81,29 @@ Nr_Natural_Mare operator +(Nr_Natural_Mare n1,Nr_Natural_Mare n2)
         else c=0;
     }
     n3.nr_cif=m+d;
+    return n3;*/
+    Nr_Natural_Mare n3;
+    int C[1000]={0},d=0,i,k,c=0;
+    if(n2>n1){n3=n1; n1=n2; n2=n3;}
+    n3.nr_cif=n1.nr_cif;
+    n2.v.a[n2.nr_cif]=0;
+    for(i=n3.nr_cif-1,k=n2.nr_cif-1;i>=0;i--,k--)
+    {
+        if(n3.nr_cif-n2.nr_cif>i)k=n2.nr_cif;
+        C[i]=n1.v.a[i]+n2.v.a[k]+c;
+        if(C[i]>9)//cazul 2-7
+        {
+            C[i]=C[i]%10;
+            c=1;
+        }
+        else c=0;
+    }
+    if(c==1)d=1;
+   // if(d==n3.nr_cif)d--;
+    n3.nr_cif=n3.nr_cif+d;
+    n3.v.a=new int [n3.nr_cif];
+    for(i=n3.nr_cif-1;i>=0+d;i--)n3.v.a[i]=C[i-d];
+    if(d==1)n3.v.a[0]=1;
     return n3;
 }
 int operator >(Nr_Natural_Mare n1,Nr_Natural_Mare n2)
@@ -98,7 +121,7 @@ int operator >(Nr_Natural_Mare n1,Nr_Natural_Mare n2)
 Nr_Natural_Mare operator -(Nr_Natural_Mare n1,Nr_Natural_Mare n2)//scadere cu rezultat in multimea numerelor naturale
 {
     Nr_Natural_Mare n3;
-    int C[1000],d=0,i,j,k,c;
+    /*int C[1000]={0},d=0,i,j,k,c;
     if(n1>n2)n3.nr_cif=n1.nr_cif;
     else n3.nr_cif=n2.nr_cif;
     n1.v.a[n1.nr_cif]=0;
@@ -108,13 +131,39 @@ Nr_Natural_Mare operator -(Nr_Natural_Mare n1,Nr_Natural_Mare n2)//scadere cu re
         if(n3.nr_cif-n1.nr_cif>i)j=n1.nr_cif;
         if(n3.nr_cif-n2.nr_cif>i)k=n2.nr_cif;
         C[i]=n1.v.a[j]-n2.v.a[k];
-        if(n2.v.a[j]>n1.v.a[k])//cazul 2-7
+        if(n2.v.a[j]>n1.v.a[k]||C[i]<0)//cazul 2-7
         {
             C[i]=C[i]+10;
             c=1;
             n1.v.a[j-1]-=c;
             c=0;
         }
+    }
+    for(i=0;i<n3.nr_cif;i++)if(C[i]!=0)break;
+    else d++;
+    if(d==n3.nr_cif)d--;
+    n3.nr_cif=n3.nr_cif-d;
+    n3.v.a=new int [n3.nr_cif];
+    for(i=n3.nr_cif-1;i>=0;i--)n3.v.a[i]=C[i+d];
+    return n3;
+    */
+    int C[1000]={0},d=0,i,k,c=0;
+    if(n2>n1){n3=n1; n1=n2; n2=n3;}
+    n3.nr_cif=n1.nr_cif;
+    n2.v.a[n2.nr_cif]=0;
+    for(i=n3.nr_cif-1,k=n2.nr_cif-1;i>=0;i--,k--)
+    {
+        if(n1.nr_cif-n2.nr_cif>i)k=n2.nr_cif;
+        C[i]=n1.v.a[i]-n2.v.a[k]-c;
+       // cout<<"a ";
+        if(n2.v.a[k]>n1.v.a[i]||C[i]<0)//cazul 2-7
+        {
+            C[i]=C[i]+10;
+            c=1;
+            //cout<<"b ";
+        }
+        else c=0;
+       // cout<<"c ";
     }
     for(i=0;i<n3.nr_cif;i++)if(C[i]!=0)break;
     else d++;
@@ -131,10 +180,10 @@ Nr_Natural_Mare operator *(Nr_Natural_Mare n1,int x)//Inmultirea unui numar natu
     {
         Nr_Natural_Mare n3;
         n3.nr_cif=n1.nr_cif+1;
-        n3.v.a=new int [n3.nr_cif+1];
-        for(i=n1.nr_cif-1;i>=0;i--)
+        n3.v.a=new int [n3.nr_cif];
+        for(i=n3.nr_cif-2;i>=0;i--)
         n3.v.a[i]=n1.v.a[i];
-        n3.v.a[n3.nr_cif]=0;
+        n3.v.a[n3.nr_cif-1]=0;
         return n3;
     }
     if(x==0)
@@ -167,14 +216,20 @@ Nr_Natural_Mare operator *(Nr_Natural_Mare n1,Nr_Natural_Mare n2)
 {
     int ok=0,cp=0;
     Nr_Natural_Mare nf,nc;
+    nf=nc*0;
     for(int i=n1.nr_cif-1;i>=0;i--)
     {
+
         nc=n2*n1.v.a[i];
+        //cout<<nc<<" nc "<<endl;
         cp=ok;
-        while(cp!=0){nc=nc*10;cp--;}
+        while(cp>0){nc=nc*10;cp--;}
+        //cout<<nc<<" nc marit "<<endl;
         nf=nc+nf;
+        //cout<<nf<<" nf ok "<<ok<<endl;
         ok++;
     }
+    //cout<<endl<<endl<<nf<<endl;
     return nf;
 }
 Nr_Natural_Mare &Nr_Natural_Mare::operator =(const Nr_Natural_Mare &n1)//atribuire vector unui vector
@@ -184,20 +239,97 @@ Nr_Natural_Mare &Nr_Natural_Mare::operator =(const Nr_Natural_Mare &n1)//atribui
     for(int i=0;i<nr_cif;i++)
     v.a[i]=n1.v.a[i];
 }
-class Numar_Intreg_mare:Nr_Natural_Mare
+class Numar_Intreg_mare: Nr_Natural_Mare
 {
     char semn;
     public:
-
+    Numar_Intreg_mare(char s='+'):Nr_Natural_Mare(0){semn=s;}
+    Numar_Intreg_mare(const Numar_Intreg_mare & w):Nr_Natural_Mare(w)
+    {
+        semn=w.semn;
+    }
+    ~Numar_Intreg_mare(){}
+    Numar_Intreg_mare &operator =(const Numar_Intreg_mare&);
+    friend istream &operator >>(istream&,Numar_Intreg_mare&);
+    friend ostream &operator <<(ostream&,Numar_Intreg_mare&);
+    friend Numar_Intreg_mare operator +(Numar_Intreg_mare ,Numar_Intreg_mare );
+    friend Numar_Intreg_mare operator -(Numar_Intreg_mare ,Numar_Intreg_mare );
+    friend Numar_Intreg_mare operator *(Numar_Intreg_mare ,Numar_Intreg_mare );
 };
+Numar_Intreg_mare &Numar_Intreg_mare::operator =(const Numar_Intreg_mare &n1)
+{
+    semn=n1.semn;
+    Nr_Natural_Mare::operator=(n1);
+}
+
+istream &operator >>(istream&in,Numar_Intreg_mare&n1)
+{
+    in>>n1.semn>>(Nr_Natural_Mare&)n1;
+    return in;
+}
+ostream &operator <<(ostream&out,Numar_Intreg_mare&n1)
+{
+    out<<n1.semn<<(Nr_Natural_Mare&)n1;
+    return out;
+}
+Numar_Intreg_mare operator +(Numar_Intreg_mare n1,Numar_Intreg_mare n2)
+{
+    Numar_Intreg_mare n3;
+    if(n1.semn!=n2.semn)
+    {
+        (Nr_Natural_Mare&)n3=(Nr_Natural_Mare&)n1-(Nr_Natural_Mare&)n2;
+        if((Nr_Natural_Mare&)n1>(Nr_Natural_Mare&)n2)n3.semn=n1.semn;
+        else n3.semn=n2.semn;
+        return n3;
+
+    }
+    else
+    {
+        (Nr_Natural_Mare&)n3=(Nr_Natural_Mare&)n1+(Nr_Natural_Mare&)n2;
+        n3.semn=n1.semn;
+        return n3;
+    }
+}
+Numar_Intreg_mare operator -(Numar_Intreg_mare n1,Numar_Intreg_mare n2)
+{
+    Numar_Intreg_mare n3;
+    if(n1.semn!=n2.semn)
+    {
+        (Nr_Natural_Mare&)n3=(Nr_Natural_Mare&)n1+(Nr_Natural_Mare&)n2;
+        n3.semn=n1.semn;
+        return n3;
+    }
+    else
+    {
+        (Nr_Natural_Mare&)n3=(Nr_Natural_Mare&)n2-(Nr_Natural_Mare&)n1;
+        if(n1.semn=='+'){
+        if((Nr_Natural_Mare&)n1>(Nr_Natural_Mare&)n2)n3.semn='+';
+        else n3.semn='-';}
+        else{
+        if((Nr_Natural_Mare&)n2>(Nr_Natural_Mare&)n1)n3.semn='+';
+        else n3.semn='-';
+        }
+        return n3;
+    }
+}
+Numar_Intreg_mare operator *(Numar_Intreg_mare n1 ,Numar_Intreg_mare n2)
+{
+    Numar_Intreg_mare n3;
+    (Nr_Natural_Mare&)n3=(Nr_Natural_Mare&)n1*(Nr_Natural_Mare&)n2;
+    if(n1.semn!=n2.semn)n3.semn='-';
+    else n3.semn='+';
+    return n3;
+}
 int main()
 {
-    int a=9;
     Nr_Natural_Mare n1,n2,n3;
-    cin>>n1;
-    cin>>n2;
-    n3=n1*n2;
-    cout<<n3;
+    Numar_Intreg_mare m1,m2,m3;
+    cin>>m1>>m2;
+    m3=m1*m2;
+    cout<<m3;
+    //cin>>n1>>n2;
+    //n3=n1*n2;
+    //cout<<n3;
     //    cin>>v;
    // cout<<v;
     return 0;
