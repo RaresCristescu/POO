@@ -23,6 +23,15 @@ class Nr_Natural_Mare
     Vector v;
     int nr_cif;
     public:
+    virtual void citire()
+    {
+    char x[1000];
+    cin>>x;
+    nr_cif=strlen(x);
+    v.a=new int [nr_cif];
+    for(int i=0;i<nr_cif;i++)
+        v.a[i]=x[i]-'0';
+    }
     Nr_Natural_Mare(){nr_cif=0;v.a=NULL;}
     Nr_Natural_Mare(int n){nr_cif=n;v.a=new int [n];}
     Nr_Natural_Mare(const Nr_Natural_Mare & w)
@@ -245,6 +254,11 @@ class Numar_Intreg_mare: Nr_Natural_Mare
 {
     char semn;
     public:
+        void citire()
+        {
+            cin>>semn;
+            cin>>(Nr_Natural_Mare&)*this;
+        }
     Numar_Intreg_mare(char s='+'):Nr_Natural_Mare(0){semn=s;}
     Numar_Intreg_mare(const Numar_Intreg_mare & w):Nr_Natural_Mare(w)
     {
@@ -268,6 +282,8 @@ Numar_Intreg_mare &Numar_Intreg_mare::operator =(const Numar_Intreg_mare &n1)
 istream &operator >>(istream&in,Numar_Intreg_mare&n1)
 {
     in>>n1.semn>>(Nr_Natural_Mare&)n1;
+    /*in>>n1.semn;
+    ((Nr_Natural_Mare&)n1).citire();*/
     return in;
 }
 ostream &operator <<(ostream&out,Numar_Intreg_mare&n1)
@@ -327,9 +343,11 @@ int main()
 {
     Nr_Natural_Mare n1,n2,n3;
     Numar_Intreg_mare m1,m2,m3;
-    cin>>m1>>m2;
-    m3=m1*m2;
-    cout<<m3;
+    //cin>>m1>>m2;
+    //m3=m1*m2;
+    //cout<<m3;
+    m1.citire();
+    cout<<m1;
     //cin>>n1>>n2;
     //n3=n1*n2;
     //cout<<n3;
