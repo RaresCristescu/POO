@@ -32,7 +32,7 @@ class Nr_Natural_Mare
     for(int i=0;i<nr_cif;i++)
         v.a[i]=x[i]-'0';
     }
-    Nr_Natural_Mare(){nr_cif=0;v.a=NULL;}
+    Nr_Natural_Mare(){nr_cif=0;v.a=new int [1];v.a[0]=0;}
     Nr_Natural_Mare(int n){nr_cif=n;v.a=new int [n];}
     Nr_Natural_Mare(const Nr_Natural_Mare & w)
     {
@@ -185,7 +185,7 @@ Nr_Natural_Mare operator -(Nr_Natural_Mare n1,Nr_Natural_Mare n2)//scadere cu re
 }
 Nr_Natural_Mare operator *(Nr_Natural_Mare n1,int x)//Inmultirea unui numar natural marecu o cifra sau 10
 {
-    int i,j=0,C[n1.nr_cif+1]={0},c=0;
+    int i,j=0,C[n1.nr_cif+10]={0},c=0;
     if(x==10)
     {
         Nr_Natural_Mare n3;
@@ -225,18 +225,18 @@ Nr_Natural_Mare operator *(Nr_Natural_Mare n1,int x)//Inmultirea unui numar natu
 Nr_Natural_Mare operator *(Nr_Natural_Mare n1,Nr_Natural_Mare n2)
 {
     int ok=0,cp=0;
-    Nr_Natural_Mare nf,nc;
-    nf=nc*0;
+    Nr_Natural_Mare nf,nc,np;
     for(int i=n1.nr_cif-1;i>=0;i--)
     {
 
         nc=n2*n1.v.a[i];
-        //cout<<nc<<" nc "<<endl;
+        cout<<nc<<" nc "<<endl;
         cp=ok;
         while(cp>0){nc=nc*10;cp--;}
-        //cout<<nc<<" nc marit "<<endl;
-        nf=nc+nf;
-        //cout<<nf<<" nf ok "<<ok<<endl;
+        cout<<nc<<" nc marit "<<endl;
+        np=nc+nf;
+        nf=np;
+        cout<<nf<<" nf ok "<<ok<<endl;
         ok++;
     }
     //cout<<endl<<endl<<nf<<endl;
@@ -334,10 +334,49 @@ Numar_Intreg_mare operator -(Numar_Intreg_mare n1,Numar_Intreg_mare n2)
 Numar_Intreg_mare operator *(Numar_Intreg_mare n1 ,Numar_Intreg_mare n2)
 {
     Numar_Intreg_mare n3;
-    dynamic_cast<Nr_Natural_Mare&>(n3)=dynamic_cast<Nr_Natural_Mare&>(n1)*dynamic_cast<Nr_Natural_Mare&>(n2);
+    (Nr_Natural_Mare&)n3=(Nr_Natural_Mare&)n1*(Nr_Natural_Mare&)n2;
     if(n1.semn!=n2.semn)n3.semn='-';
     else n3.semn='+';
     return n3;
+}
+class lista
+{
+    Numar_Intreg_mare *nr;
+    int n;
+    public:
+    void citire(){
+        cin>> n;
+        nr=new Numar_Intreg_mare[n];
+    for(int i=0;i<n;i++)
+        nr[i].citire();
+    }
+    lista &operator =(const lista&);
+    friend istream &operator >>(istream&,lista&);
+    friend ostream &operator <<(ostream&,lista&);
+};
+istream &operator >>(istream&in,lista& l)
+{
+    in>>l.n;
+    l.nr=new Numar_Intreg_mare [l.n];
+    for( int i=0;i<l.n;i++)
+    cin>>l.nr[i];
+    return in;
+}
+ostream &operator <<(ostream& out,lista& l)
+{
+    for(int i=0;i<l.n;i++)
+    {
+        cout<<l.nr[i];
+        out<<endl;
+    }
+    return out;
+}
+lista &lista::operator =(const lista &l)
+{
+    n=l.n;
+    //Numar_Intreg_mare::operator=(l.nr);
+    nr=l.nr;
+    return *this;
 }
 int main()
 {
@@ -346,8 +385,15 @@ int main()
     //cin>>m1>>m2;
     //m3=m1*m2;
     //cout<<m3;
-    m1.citire();
-    cout<<m1;
+    //m1.citire();
+   // m2.citire();
+    //m3=m1*m2;
+    //cout<<m3;
+    lista l,b;
+    //cin>>l;
+    l.citire();
+    b=l;
+    cout<<b;
     //cin>>n1>>n2;
     //n3=n1*n2;
     //cout<<n3;
