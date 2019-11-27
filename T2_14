@@ -83,9 +83,9 @@ Nr_Natural_Mare operator +(Nr_Natural_Mare n1,Nr_Natural_Mare n2)
     n3.nr_cif=m+d;
     return n3;*/
     Nr_Natural_Mare n3;
-    int C[1000]={0},d=0,i,k,c=0;
     if(n2>n1){n3=n1; n1=n2; n2=n3;}
     n3.nr_cif=n1.nr_cif;
+    int C[n3.nr_cif+1]={0},d=0,i,k,c=0;
     n2.v.a[n2.nr_cif]=0;
     for(i=n3.nr_cif-1,k=n2.nr_cif-1;i>=0;i--,k--)
     {
@@ -147,9 +147,10 @@ Nr_Natural_Mare operator -(Nr_Natural_Mare n1,Nr_Natural_Mare n2)//scadere cu re
     for(i=n3.nr_cif-1;i>=0;i--)n3.v.a[i]=C[i+d];
     return n3;
     */
-    int C[1000]={0},d=0,i,k,c=0;
+    //int C[1000]={0},d=0,i,k,c=0;
     if(n2>n1){n3=n1; n1=n2; n2=n3;}
     n3.nr_cif=n1.nr_cif;
+    int C[n3.nr_cif]={0},d=0,i,k,c=0;
     n2.v.a[n2.nr_cif]=0;
     for(i=n3.nr_cif-1,k=n2.nr_cif-1;i>=0;i--,k--)
     {
@@ -175,7 +176,7 @@ Nr_Natural_Mare operator -(Nr_Natural_Mare n1,Nr_Natural_Mare n2)//scadere cu re
 }
 Nr_Natural_Mare operator *(Nr_Natural_Mare n1,int x)//Inmultirea unui numar natural marecu o cifra sau 10
 {
-    int i,j=0,C[1000]={0},c=0;
+    int i,j=0,C[n1.nr_cif+1]={0},c=0;
     if(x==10)
     {
         Nr_Natural_Mare n3;
@@ -238,6 +239,7 @@ Nr_Natural_Mare &Nr_Natural_Mare::operator =(const Nr_Natural_Mare &n1)//atribui
     v.a=new int [nr_cif];
     for(int i=0;i<nr_cif;i++)
     v.a[i]=n1.v.a[i];
+    return *this;
 }
 class Numar_Intreg_mare: Nr_Natural_Mare
 {
@@ -260,6 +262,7 @@ Numar_Intreg_mare &Numar_Intreg_mare::operator =(const Numar_Intreg_mare &n1)
 {
     semn=n1.semn;
     Nr_Natural_Mare::operator=(n1);
+    return *this;
 }
 
 istream &operator >>(istream&in,Numar_Intreg_mare&n1)
@@ -315,7 +318,7 @@ Numar_Intreg_mare operator -(Numar_Intreg_mare n1,Numar_Intreg_mare n2)
 Numar_Intreg_mare operator *(Numar_Intreg_mare n1 ,Numar_Intreg_mare n2)
 {
     Numar_Intreg_mare n3;
-    (Nr_Natural_Mare&)n3=(Nr_Natural_Mare&)n1*(Nr_Natural_Mare&)n2;
+    dynamic_cast<Nr_Natural_Mare&>(n3)=dynamic_cast<Nr_Natural_Mare&>(n1)*dynamic_cast<Nr_Natural_Mare&>(n2);
     if(n1.semn!=n2.semn)n3.semn='-';
     else n3.semn='+';
     return n3;
@@ -333,4 +336,4 @@ int main()
     //    cin>>v;
    // cout<<v;
     return 0;
- }
+}
