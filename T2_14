@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string.h>
+#include<fstream>
 using namespace std;
 class Nr_Natural_Mare;
 class Vector
@@ -378,22 +379,208 @@ lista &lista::operator =(const lista &l)
     nr=l.nr;
     return *this;
 }
+/*class obiect
+{
+    int id;
+    string denumire;
+public:
+    obiect &operator =(const obiect&);
+
+};
+obiect &obiect::operator=(const obiect &ob)
+{
+    id=ob.id;
+    strcpy(denumire,ob.denumire);
+    return *this;
+}
+class obiect_actualizat: obiect
+{
+    string data;
+public:
+    obiect_actualizat &operator =(const obiect_actualizat&);
+};
+obiect_actualizat &obiect_actualizat::operator =(const obiect_actualizat& ob)
+{
+    strcpy(data,ob.data);
+    obiect::operator=(ob);
+    return *this;
+}
+class obiect_personalizat:public obiect
+{
+    char* autor_proiect;
+public:
+    obiect_personalizat &operator =(const obiect_personalizat&);
+};
+obiect_personalizat &obiect_personalizat::operator =(const obiect_personalizat&ob)
+{
+    autor_proiect=new char [strlen(ob.autor_proiect)]
+    strcpy(autor_proiect,ob.autor_proiect);
+    obiect::operator=(ob);
+    return *this;
+}
+class proiect:public obiect_actualizat,public obiect_personalizat
+{
+
+};
+class hibrid: public Nr_Natural_Mare,public proiect
+{
+
+};*/
+class farmacie_abstracta
+{
+    string denumire;
+public:
+    //virtual int calcul_venit()=0;
+    farmacie_abstracta(){denumire="";}
+    farmacie_abstracta(string s){denumire=s;}
+    ~farmacie_abstracta(){}
+    farmacie_abstracta(const farmacie_abstracta & w)
+    {
+        denumire=w.denumire;
+    }
+    farmacie_abstracta  &operator =(const farmacie_abstracta&);
+    friend ifstream &operator >>(ifstream&,farmacie_abstracta&);
+    virtual void afisare(){cout<<denumire;}
+};
+farmacie_abstracta &farmacie_abstracta::operator=(const farmacie_abstracta&f)
+{
+    denumire=f.denumire;
+    return *this;
+}
+ifstream &operator >>(ifstream&in ,farmacie_abstracta&f)
+{
+    in>>f.denumire;
+    return in;
+}
+class farmacie_offline:public farmacie_abstracta
+{
+    int nr_luni;
+    double *cifra_afaceri_luna;
+public:
+    farmacie_offline():farmacie_abstracta(){nr_luni=0;cifra_afaceri_luna=NULL;}
+    farmacie_offline(int n):farmacie_abstracta(){nr_luni=n;}
+    ~farmacie_offline(){delete []cifra_afaceri_luna;}
+    farmacie_offline(const farmacie_offline & w):farmacie_abstracta(w)
+    {
+        nr_luni=w.nr_luni;
+        cifra_afaceri_luna=w.cifra_afaceri_luna;
+    }
+    farmacie_offline  &operator =(const farmacie_offline&);
+    friend ifstream &operator >>(ifstream&,farmacie_offline&);
+    void afisare(){((farmacie_abstracta&)*this).afisare();
+    cout<<(*this).nr_luni;
+    for(int i=0;i<(*this).nr_luni;i++)
+    cout<<(*this).cifra_afaceri_luna[i];}
+};
+farmacie_offline &farmacie_offline::operator=(const farmacie_offline& f)
+{
+    nr_luni=f.nr_luni;
+    cifra_afaceri_luna=f.cifra_afaceri_luna;
+    farmacie_abstracta::operator=(f);
+    return *this;
+}
+ifstream &operator >>(ifstream&in,farmacie_offline&f)
+{
+    in>>(farmacie_abstracta&)f;
+    in>>f.nr_luni;
+    f.cifra_afaceri_luna=new double [f.nr_luni];
+    for(int i=0;i<f.nr_luni;i++)
+        in>>f.cifra_afaceri_luna[i];
+    return in;
+}
+class farmacie_online:public farmacie_abstracta
+{
+    int nr_luni;
+    double *cifra_afaceri_luna;
+    char *adresa_web;
+    int nr_vizitatori;
+public:
+    farmacie_online():farmacie_abstracta(){nr_luni=0;cifra_afaceri_luna=NULL;adresa_web=NULL;nr_vizitatori=0;}
+    farmacie_online(int n):farmacie_abstracta(){nr_luni=0;cifra_afaceri_luna=NULL;nr_vizitatori=n;adresa_web=NULL;}
+    ~farmacie_online(){delete []adresa_web;delete []cifra_afaceri_luna;}
+    farmacie_online(const farmacie_online & w):farmacie_abstracta(w)
+    {
+        nr_luni=w.nr_luni;
+        cifra_afaceri_luna=w.cifra_afaceri_luna;
+        nr_vizitatori=w.nr_vizitatori;
+        adresa_web=new char [strlen(w.adresa_web)];
+        strcpy(adresa_web,w.adresa_web);
+    }
+    farmacie_online  &operator =(const farmacie_online&);
+    friend ifstream &operator >>(ifstream&,farmacie_online&);
+    void afisare(){((farmacie_abstracta&)*this).afisare();
+    cout<<(*this).nr_luni;
+    for(int i=0;i<(*this).nr_luni;i++)
+    cout<<(*this).cifra_afaceri_luna[i];
+    cout<<(*this).adresa_web;
+    cout<<(*this).nr_vizitatori;}
+};
+farmacie_online &farmacie_online::operator=(const farmacie_online& f)
+{
+    nr_luni=f.nr_luni;
+    cifra_afaceri_luna=f.cifra_afaceri_luna;
+    nr_vizitatori=f.nr_vizitatori;
+    adresa_web=new char [strlen(f.adresa_web)];
+    strcpy(adresa_web,f.adresa_web);
+    farmacie_abstracta::operator=(f);
+    return *this;
+}
+ifstream &operator >>(ifstream&in,farmacie_online&f)
+{
+    char c[100];
+    in>>(farmacie_abstracta&)f;
+    in>>c;
+    f.adresa_web=new char [strlen(c)];
+    strcpy(f.adresa_web,c);
+    in>>f.nr_vizitatori;
+    return in;
+}
+class farmacie_dubla_specializare: public farmacie_offline,public farmacie_online
+{
+    int nr_angajati;
+public:
+    farmacie_dubla_specializare():farmacie_offline(),farmacie_online(){nr_angajati=0;}
+    farmacie_dubla_specializare(int n):farmacie_offline(),farmacie_online(){nr_angajati=n;}
+    ~farmacie_dubla_specializare(){}
+    farmacie_dubla_specializare(const farmacie_dubla_specializare & w):farmacie_offline(w),farmacie_online(w)
+    {
+        nr_angajati=w.nr_angajati;
+    }
+    farmacie_dubla_specializare  &operator =(const farmacie_dubla_specializare&);
+    friend ifstream &operator >>(ifstream&,farmacie_dubla_specializare&);
+}
+farmacie_dubla_specializare &farmacie_dubla_specializare::operator=(const farmacie_dubla_specializare& f)
+{
+    nr_angajati=f.nr_angajati;
+    farmacie_offline::operator=(f);
+    farmacie_online::operator=(f);
+    return *this;
+}
+ifstream &operator >>(ifstream&in,farmacie_dubla_specializare&f)
+    {
+        in>>(farmacie_online&)f;
+        in>>(farmacie_offline&)f;
+        in>>f.nr_angajati;
+        return in;
+    }
 int main()
 {
     Nr_Natural_Mare n1,n2,n3;
     Numar_Intreg_mare m1,m2,m3;
+    farmacie_dubla_specializare f1;
+    cin>>f1;
     //cin>>m1>>m2;
-    //m3=m1*m2;
+    //m3=m1+m2;
     //cout<<m3;
     //m1.citire();
    // m2.citire();
     //m3=m1*m2;
     //cout<<m3;
-    lista l,b;
+    //lista l,b;
     //cin>>l;
-    l.citire();
-    b=l;
-    cout<<b;
+    //l.citire();
+    //b=l;
+    //cout<<b;
     //cin>>n1>>n2;
     //n3=n1*n2;
     //cout<<n3;
